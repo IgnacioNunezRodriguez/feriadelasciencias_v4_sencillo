@@ -13,6 +13,9 @@ function MusicSongMarioBros () {
     music.play(music.stringPlayable("A4 B4 Bb4 A4 G4 ", 380), music.PlaybackMode.UntilDone)
     music.play(music.stringPlayable("E4 G4 A4 F4 G4 E4 C4 D4 B3 ", 320), music.PlaybackMode.UntilDone)
 }
+function MusicSongMozart () {
+    music.play(music.stringPlayable("C4 D4 E4 C4 C4 D4 E4 C4 E4 F4 G4 E4 F4 G4", 300), music.PlaybackMode.UntilDone)
+}
 function GirarDerecha (velocidad: number, tiempo: number) {
     maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CCW, velocidad)
     basic.pause(tiempo)
@@ -71,32 +74,32 @@ function MoverAtras (velocidad: number, tiempo: number) {
     basic.pause(tiempo)
     maqueen.motorStop(maqueen.Motors.All)
 }
+let song = 0
 let dir2 = 0
 let dir1 = 0
 let strip: neopixel.Strip = null
-radio.setGroup(1)
 strip = neopixel.create(DigitalPin.P15, 4, NeoPixelMode.RGB)
-let song = 0
+MusicSongMozart()
 basic.forever(function () {
     if (maqueen.Ultrasonic(PingUnit.Centimeters) >= 15) {
         song = 0
-        strip.showColor(neopixel.colors(NeoPixelColors.White))
-        MoverAdelante(120, 150)
-    }
-    if (maqueen.Ultrasonic(PingUnit.Centimeters) < 15 && maqueen.Ultrasonic(PingUnit.Centimeters) >= 10) {
-        song = 0
-        strip.showColor(neopixel.colors(NeoPixelColors.Blue))
-        MoverAdelante(80, 150)
-    }
-    if (maqueen.Ultrasonic(PingUnit.Centimeters) < 10 && maqueen.Ultrasonic(PingUnit.Centimeters) >= 7) {
-        song = 1
-        strip.showColor(neopixel.colors(NeoPixelColors.Green))
-        MoverAdelante(70, 150)
+        if (maqueen.Ultrasonic(PingUnit.Centimeters) < 15 && maqueen.Ultrasonic(PingUnit.Centimeters) >= 10) {
+            song = 0
+            strip.showColor(neopixel.colors(NeoPixelColors.Blue))
+            MoverAdelante(80, 150)
+        }
+        if (maqueen.Ultrasonic(PingUnit.Centimeters) < 10 && maqueen.Ultrasonic(PingUnit.Centimeters) >= 7) {
+            song = 1
+            strip.showColor(neopixel.colors(NeoPixelColors.Green))
+            MoverAdelante(70, 150)
+        }
         if (maqueen.Ultrasonic(PingUnit.Centimeters) < 7) {
             song = 2
             strip.showColor(neopixel.colors(NeoPixelColors.Red))
             GirarDerecha(60, 250)
         }
+        strip.showColor(neopixel.colors(NeoPixelColors.White))
+        MoverAdelante(120, 150)
     }
 })
 control.inBackground(function () {
@@ -107,6 +110,8 @@ control.inBackground(function () {
             DarkVader()
         } else if (song == 2) {
             MusicSongFigaro()
+        } else if (song == 3) {
+            MusicSongMozart()
         }
     }
 })
